@@ -125,6 +125,12 @@ mkdir -p .agent/Tasks
 mkdir -p .agent/System
 mkdir -p .agent/SOP
 
+# Download and save version for update checking
+echo -e "${BLUE}Saving version info...${NC}"
+download_file "$REPO_RAW/VERSION" ".claude/skills/vibe-coding-toolkit/.version"
+INSTALLED_VERSION=$(cat .claude/skills/vibe-coding-toolkit/.version | tr -d '[:space:]')
+echo -e "  ${GREEN}✓${NC} Version $INSTALLED_VERSION installed"
+
 # Success message
 echo ""
 echo -e "${GREEN}╔═══════════════════════════════════════════════════════════╗${NC}"
