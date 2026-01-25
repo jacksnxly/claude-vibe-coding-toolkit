@@ -1,0 +1,17 @@
+{
+  "name": "vibe-coding-toolkit",
+  "version": "1.0.0",
+  "description": "AI-augmented development workflow with 4 phases: Discovery (feature-brief), Design (technical-spec), Build (implement-feature), and Verify (review-code). Enables non-technical and technical team members to use AI coding agents while maintaining code quality and architectural integrity.",
+  "author": "jacksnxly",
+  "repository": "https://github.com/jacksnxly/claude-vibe-coding-toolkit",
+  "keywords": [
+    "vibe-coding",
+    "workflow",
+    "feature-brief",
+    "technical-spec",
+    "implementation",
+    "code-review",
+    "requirements",
+    "specification"
+  ]
+}
