@@ -85,9 +85,12 @@ git status --short | head -10
 | 3. Build | /vctk-implement-feature | Code changes |
 | 4. Verify | /vctk-review-code | Audit report |
 
-| Session | Command |
+| Utility | Command |
 |---------|---------|
+| Preflight check | /vctk-init |
 | Save session | /vctk-save-session |
+| Update VCTK | /vctk-update |
+| Sync docs | /vctk-sync-docs |
 ```
 
 ## Step 7: Ready Prompt

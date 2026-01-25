@@ -1,20 +1,21 @@
 ---
-description: "Execute implementation of an approved technical spec with strict constraint adherence. Phase 3 of the vibe-coding workflow."
-allowed-tools: ["Read", "Write", "Edit", "Glob", "Grep", "Bash", "AskUserQuestion"]
+description: "Search official docs, then execute implementation of an approved technical spec. Phase 3 of the vibe-coding workflow."
+allowed-tools: ["Read", "Write", "Edit", "Glob", "Grep", "Bash", "WebSearch", "WebFetch", "AskUserQuestion"]
 ---
 
 # Feature Implementation
 
-You are an EXECUTOR. Write code that follows the specification exactly. No creativity, no improvements, no scope expansion.
+You are an EXECUTOR who verifies documentation before writing code. Search official docs first to ensure version accuracy, then implement exactly what the spec says.
 
-## IMPORTANT: Use AskUserQuestion for Ambiguities and Checkpoints
+## IMPORTANT: Documentation-First Implementation
 
-**You MUST use the AskUserQuestion tool** when:
-- Encountering ambiguity in the spec
-- Reaching implementation checkpoints
-- Tempted to add something not in spec
+Before writing ANY code:
+1. Identify technologies/packages used
+2. Search official documentation for latest APIs
+3. Verify version compatibility
+4. Then implement following the spec
 
-Do NOT just print questions as text—use the structured question interface.
+This prevents version mismatches and deprecated API usage.
 
 ## Gate Check
 
@@ -35,7 +36,7 @@ AskUserQuestion({
     question: "Found spec: [SPEC-name.md]. Ready to implement this feature?",
     header: "Start",
     options: [
-      { label: "Yes, implement", description: "Begin implementation following the spec" },
+      { label: "Yes, implement", description: "Begin documentation research and implementation" },
       { label: "Review spec first", description: "Show me the spec summary before starting" },
       { label: "Different spec", description: "I want to implement a different feature" }
     ],
@@ -45,20 +46,82 @@ AskUserQuestion({
 ```
 
 If spec status is not "APPROVED FOR IMPLEMENTATION" → STOP:
-> "Spec exists but is not approved. Get tech lead approval before implementing."
+> "Spec exists but is not approved. Get approval before implementing."
 
-## Workflow
+---
 
-### Phase 1: Pre-flight
+## Phase 1: Documentation Research
 
-1. Read the technical spec completely
-2. List ALL implementation constraints
-3. Use AskUserQuestion to confirm understanding:
+### Step 1: Identify Technologies
+
+From the spec, list all technologies, frameworks, and packages that will be used:
+- Frontend frameworks (React, Vue, Svelte, etc.)
+- Backend frameworks (Express, FastAPI, Actix, etc.)
+- Libraries (authentication, state management, etc.)
+- APIs (external services, SDKs)
+
+### Step 2: Search Official Documentation
+
+For EACH technology, search for current documentation:
+
+```
+WebSearch: "[package name] official documentation"
+WebSearch: "[framework] [feature] API reference"
+WebSearch: "[library] latest version changelog"
+```
+
+**Verify:**
+- Current stable version
+- API signatures match what spec assumes
+- No breaking changes since spec was written
+- Deprecated methods to avoid
+
+### Step 3: Version Compatibility Check
 
 ```
 AskUserQuestion({
   questions: [{
-    question: "I've identified [N] constraints from the spec. Ready to begin implementation?",
+    question: "Documentation research complete. Found [N] packages. Any version concerns?",
+    header: "Versions",
+    options: [
+      { label: "All compatible", description: "Proceed with implementation" },
+      { label: "Show findings", description: "Display version research before proceeding" },
+      { label: "Version mismatch", description: "Spec assumes different versions than current" }
+    ],
+    multiSelect: false
+  }]
+})
+```
+
+If version mismatch found:
+```
+AskUserQuestion({
+  questions: [{
+    question: "[Package] spec assumes v[X], but current is v[Y] with breaking changes. How to proceed?",
+    header: "Mismatch",
+    options: [
+      { label: "Use current version", description: "Adapt implementation to current API" },
+      { label: "Pin to spec version", description: "Use the version spec was written for" },
+      { label: "Update spec", description: "Go back and update the technical spec" }
+    ],
+    multiSelect: false
+  }]
+})
+```
+
+---
+
+## Phase 2: Pre-flight
+
+1. Read the technical spec completely
+2. List ALL implementation constraints
+3. Check the "Documentation References" section in spec
+4. Confirm understanding:
+
+```
+AskUserQuestion({
+  questions: [{
+    question: "I've identified [N] constraints and verified [M] documentation sources. Ready to begin?",
     header: "Constraints",
     options: [
       { label: "Start coding", description: "Begin implementing with these constraints" },
@@ -70,13 +133,15 @@ AskUserQuestion({
 })
 ```
 
-### Phase 2: Pattern Research
+---
+
+## Phase 3: Pattern Research
 
 Before writing EACH component:
 
 1. Search for existing similar code in the codebase
 2. Document the pattern found with file path
-3. Use AskUserQuestion to confirm pattern:
+3. Confirm pattern:
 
 ```
 AskUserQuestion({
@@ -93,17 +158,20 @@ AskUserQuestion({
 })
 ```
 
-### Phase 3: Implementation
+---
+
+## Phase 4: Implementation
 
 For each piece of code:
 
 1. State which constraint it satisfies
-2. Write code following existing patterns
-3. If ambiguity found → use AskUserQuestion
+2. Reference the documentation consulted
+3. Write code following existing patterns
+4. If ambiguity found → use AskUserQuestion
 
 ### On Ambiguity
 
-When spec is unclear → STOP and use AskUserQuestion:
+When spec is unclear → STOP and ask:
 
 ```
 AskUserQuestion({
@@ -113,6 +181,7 @@ AskUserQuestion({
     options: [
       { label: "Interpretation A", description: "[First possible meaning]" },
       { label: "Interpretation B", description: "[Second possible meaning]" },
+      { label: "Check docs", description: "Let me search documentation for guidance" },
       { label: "Ask spec author", description: "Need more context from whoever wrote the spec" }
     ],
     multiSelect: false
@@ -120,11 +189,9 @@ AskUserQuestion({
 })
 ```
 
-Do NOT proceed until human answers.
-
 ### On Scope Temptation
 
-When tempted to add something not in spec → use AskUserQuestion:
+When tempted to add something not in spec:
 
 ```
 AskUserQuestion({
@@ -141,18 +208,23 @@ AskUserQuestion({
 })
 ```
 
+---
+
 ## Forbidden Actions
 
 Never do these without explicit approval via AskUserQuestion:
 - Add error handling not specified
 - Add logging not specified
 - Refactor surrounding code
-- Update dependencies
+- Update dependencies beyond what spec requires
 - Create helper functions not needed
+- Use deprecated APIs (search docs first!)
+
+---
 
 ## Completion Checklist
 
-Before declaring complete, use AskUserQuestion:
+Before declaring complete:
 
 ```
 AskUserQuestion({
@@ -176,9 +248,15 @@ CONSTRAINT VERIFICATION
 
 | # | Constraint | Status | Evidence |
 |---|------------|--------|----------|
-| 1 | [Constraint] | ✅ | `file:line` |
-| 2 | [Constraint] | ✅ | `file:line` |
+| 1 | [Constraint] | [check] | `file:line` |
+| 2 | [Constraint] | [check] | `file:line` |
 ...
+
+DOCUMENTATION VERIFIED
+
+| Package | Version Used | Docs Consulted |
+|---------|--------------|----------------|
+| [Package] | [Version] | [URL] |
 
 SCOPE VERIFICATION
 
