@@ -16,7 +16,7 @@ ls .agent/specs/SPEC-*.md
 ```
 
 If no spec found → STOP immediately:
-> "No technical spec found in .agent/specs/. Run /vibe-coding-toolkit:technical-spec first."
+> "No technical spec found in .agent/specs/. Run /vctk-technical-spec first."
 
 If spec exists but status is not "APPROVED FOR IMPLEMENTATION" → STOP:
 > "Spec exists but is not approved. Get tech lead approval before implementing."

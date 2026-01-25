@@ -16,7 +16,7 @@ ls .agent/briefs/BRIEF-*.md
 ```
 
 If no brief found → STOP immediately:
-> "No feature brief found in .agent/briefs/. Run /vibe-coding-toolkit:feature-brief first to create requirements before technical design."
+> "No feature brief found in .agent/briefs/. Run /vctk-feature-brief first to create requirements before technical design."
 
 If brief exists, read it and confirm with user before proceeding.
 

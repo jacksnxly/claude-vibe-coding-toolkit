@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Vibe Coding Toolkit Uninstaller
+# Vibe Coding Toolkit (VCTK) Uninstaller
 # Removes vibe-coding-toolkit from your project's .claude/ folder
 # Usage: curl -fsSL https://raw.githubusercontent.com/jacksnxly/claude-vibe-coding-toolkit/main/uninstall.sh | bash
 
@@ -15,20 +15,32 @@ NC='\033[0m'
 
 echo -e "${CYAN}"
 echo "╔═══════════════════════════════════════════════════════════╗"
-echo "║            Vibe Coding Toolkit Uninstaller                ║"
+echo "║        Vibe Coding Toolkit (VCTK) Uninstaller             ║"
 echo "╚═══════════════════════════════════════════════════════════╝"
 echo -e "${NC}"
 
-# Check if vibe-coding-toolkit is installed
+# Check if vibe-coding-toolkit is installed (check both old and new command names)
 INSTALLED=0
 
 if [ -d ".claude/skills/vibe-coding-toolkit" ]; then
     INSTALLED=1
 fi
 
-if [ -f ".claude/commands/feature-brief.md" ] || [ -f ".claude/commands/technical-spec.md" ] || [ -f ".claude/commands/implement-feature.md" ] || [ -f ".claude/commands/review-code.md" ]; then
-    INSTALLED=1
-fi
+# Check for new vctk- prefixed commands
+for cmd in vctk-feature-brief vctk-technical-spec vctk-implement-feature vctk-review-code vctk-init-session vctk-save-session; do
+    if [ -f ".claude/commands/$cmd.md" ]; then
+        INSTALLED=1
+        break
+    fi
+done
+
+# Check for old command names (for backward compatibility)
+for cmd in feature-brief technical-spec implement-feature review-code; do
+    if [ -f ".claude/commands/$cmd.md" ]; then
+        INSTALLED=1
+        break
+    fi
+done
 
 if [ $INSTALLED -eq 0 ]; then
     echo -e "${YELLOW}Vibe Coding Toolkit is not installed in this directory.${NC}"
@@ -45,6 +57,13 @@ if [ -d ".claude/skills/vibe-coding-toolkit" ]; then
 fi
 
 echo -e "  ${YELLOW}Commands:${NC}"
+# Check new vctk- commands
+for cmd in vctk-feature-brief vctk-technical-spec vctk-implement-feature vctk-review-code vctk-init-session vctk-save-session; do
+    if [ -f ".claude/commands/$cmd.md" ]; then
+        echo "    - .claude/commands/$cmd.md"
+    fi
+done
+# Check old commands (backward compatibility)
 for cmd in feature-brief technical-spec implement-feature review-code; do
     if [ -f ".claude/commands/$cmd.md" ]; then
         echo "    - .claude/commands/$cmd.md"
@@ -87,26 +106,38 @@ if [ -d ".claude/skills/vibe-coding-toolkit" ]; then
     echo -e "  ${GREEN}✓${NC} Skills removed"
 fi
 
-# Remove commands
+# Remove commands (new vctk- prefix)
 echo -e "${BLUE}Removing commands...${NC}"
-for cmd in feature-brief technical-spec implement-feature review-code; do
+for cmd in vctk-feature-brief vctk-technical-spec vctk-implement-feature vctk-review-code vctk-init-session vctk-save-session; do
     if [ -f ".claude/commands/$cmd.md" ]; then
         rm ".claude/commands/$cmd.md"
         echo -e "  ${GREEN}✓${NC} Removed $cmd"
     fi
 done
 
+# Remove old commands (backward compatibility)
+for cmd in feature-brief technical-spec implement-feature review-code; do
+    if [ -f ".claude/commands/$cmd.md" ]; then
+        rm ".claude/commands/$cmd.md"
+        echo -e "  ${GREEN}✓${NC} Removed $cmd (legacy)"
+    fi
+done
+
 # Ask about .agent directories
 echo ""
-if [ -d ".agent/briefs" ] || [ -d ".agent/specs" ]; then
-    echo -e "${YELLOW}The .agent/briefs/ and .agent/specs/ directories contain your workflow documents.${NC}"
-    read -p "Remove these empty directories? (keeps any documents) (y/n) " -n 1 -r
+if [ -d ".agent/briefs" ] || [ -d ".agent/specs" ] || [ -d ".agent/sessions" ]; then
+    echo -e "${YELLOW}The .agent/ directory contains your workflow documents and session history.${NC}"
+    read -p "Remove empty .agent subdirectories? (keeps any documents) (y/n) " -n 1 -r
     echo
 
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         # Only remove if empty
         rmdir .agent/briefs 2>/dev/null && echo -e "  ${GREEN}✓${NC} Removed .agent/briefs/" || echo -e "  ${YELLOW}⊘${NC} .agent/briefs/ not empty, keeping"
         rmdir .agent/specs 2>/dev/null && echo -e "  ${GREEN}✓${NC} Removed .agent/specs/" || echo -e "  ${YELLOW}⊘${NC} .agent/specs/ not empty, keeping"
+        rmdir .agent/sessions 2>/dev/null && echo -e "  ${GREEN}✓${NC} Removed .agent/sessions/" || echo -e "  ${YELLOW}⊘${NC} .agent/sessions/ not empty, keeping"
+        rmdir .agent/Tasks 2>/dev/null || true
+        rmdir .agent/System 2>/dev/null || true
+        rmdir .agent/SOP 2>/dev/null || true
         rmdir .agent 2>/dev/null || true
     fi
 fi
@@ -119,6 +150,6 @@ rmdir .claude 2>/dev/null || true
 echo ""
 echo -e "${GREEN}Vibe Coding Toolkit has been removed.${NC}"
 echo ""
-echo -e "${YELLOW}Your workflow documents (briefs/specs) were preserved.${NC}"
+echo -e "${YELLOW}Your workflow documents (briefs/specs/sessions) were preserved.${NC}"
 echo "To reinstall: curl -fsSL https://raw.githubusercontent.com/jacksnxly/claude-vibe-coding-toolkit/main/install.sh | bash"
 echo ""

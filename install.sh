@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Vibe Coding Toolkit Installer
+# Vibe Coding Toolkit (VCTK) Installer
 # Installs skills and commands into your project's .claude/ folder
 # Usage: curl -fsSL https://raw.githubusercontent.com/jacksnxly/claude-vibe-coding-toolkit/main/install.sh | bash
 
@@ -19,8 +19,8 @@ NC='\033[0m' # No Color
 
 echo -e "${CYAN}"
 echo "╔═══════════════════════════════════════════════════════════╗"
-echo "║            Vibe Coding Toolkit Installer                  ║"
-echo "║   AI-Augmented Development Workflow (4 Phases)            ║"
+echo "║         Vibe Coding Toolkit (VCTK) Installer              ║"
+echo "║      AI-Augmented Development Workflow (4 Phases)         ║"
 echo "╚═══════════════════════════════════════════════════════════╝"
 echo -e "${NC}"
 
@@ -55,14 +55,31 @@ echo -e "${BLUE}Creating .claude directory structure...${NC}"
 mkdir -p .claude/commands
 mkdir -p .claude/skills/vibe-coding-toolkit/{feature-brief/references,technical-spec/references,implement-feature/references,review-code/references}
 
-# Download commands
+# Clean up old unprefixed commands (v1 → v2 migration)
+OLD_COMMANDS=("feature-brief" "technical-spec" "implement-feature" "review-code")
+CLEANED=0
+
+for old_cmd in "${OLD_COMMANDS[@]}"; do
+    if [ -f ".claude/commands/$old_cmd.md" ]; then
+        rm ".claude/commands/$old_cmd.md"
+        CLEANED=1
+    fi
+done
+
+if [ $CLEANED -eq 1 ]; then
+    echo -e "${YELLOW}Cleaned up old command names (migrating to vctk- prefix)${NC}"
+fi
+
+# Download commands (with vctk- prefix)
 echo -e "${BLUE}Downloading commands...${NC}"
 
 COMMANDS=(
-    "feature-brief"
-    "technical-spec"
-    "implement-feature"
-    "review-code"
+    "vctk-feature-brief"
+    "vctk-technical-spec"
+    "vctk-implement-feature"
+    "vctk-review-code"
+    "vctk-init-session"
+    "vctk-save-session"
 )
 
 for cmd in "${COMMANDS[@]}"; do
@@ -99,10 +116,14 @@ download_file "$REPO_RAW/skills/review-code/references/confidence-scoring.md" ".
 download_file "$REPO_RAW/skills/review-code/references/security-checklist.md" ".claude/skills/vibe-coding-toolkit/review-code/references/security-checklist.md"
 download_file "$REPO_RAW/skills/review-code/references/audit-report-template.md" ".claude/skills/vibe-coding-toolkit/review-code/references/audit-report-template.md"
 
-# Create .agent directory for briefs and specs
+# Create .agent directory for briefs, specs, and sessions
 echo -e "${BLUE}Creating .agent directory for workflow documents...${NC}"
 mkdir -p .agent/briefs
 mkdir -p .agent/specs
+mkdir -p .agent/sessions
+mkdir -p .agent/Tasks
+mkdir -p .agent/System
+mkdir -p .agent/SOP
 
 # Success message
 echo ""
@@ -112,31 +133,31 @@ echo -e "${GREEN}╚════════════════════
 echo ""
 echo -e "Commands installed to: ${BLUE}.claude/commands/${NC}"
 echo -e "Skills installed to:   ${BLUE}.claude/skills/vibe-coding-toolkit/${NC}"
-echo -e "Workflow docs folder:  ${BLUE}.agent/briefs/${NC} and ${BLUE}.agent/specs/${NC}"
+echo -e "Workflow folders:      ${BLUE}.agent/{briefs,specs,sessions}/${NC}"
 echo ""
 echo -e "${CYAN}═══════════════════════════════════════════════════════════${NC}"
-echo -e "${YELLOW}                    4-Phase Workflow                        ${NC}"
+echo -e "${YELLOW}                    VCTK Commands                          ${NC}"
 echo -e "${CYAN}═══════════════════════════════════════════════════════════${NC}"
 echo ""
-echo -e "  ${CYAN}Phase 1: Discovery${NC}"
-echo -e "    /feature-brief         - Extract requirements via interview"
+echo -e "  ${CYAN}Development Workflow${NC}"
+echo -e "    /vctk-feature-brief      Phase 1: Extract requirements"
+echo -e "    /vctk-technical-spec     Phase 2: Research & design"
+echo -e "    /vctk-implement-feature  Phase 3: Build from spec"
+echo -e "    /vctk-review-code        Phase 4: Audit implementation"
 echo ""
-echo -e "  ${CYAN}Phase 2: Design${NC}"
-echo -e "    /technical-spec        - Research codebase & gather decisions"
-echo ""
-echo -e "  ${CYAN}Phase 3: Build${NC}"
-echo -e "    /implement-feature     - Execute spec with constraint tracking"
-echo ""
-echo -e "  ${CYAN}Phase 4: Verify${NC}"
-echo -e "    /review-code           - Audit against spec (confidence scoring)"
+echo -e "  ${CYAN}Session Management${NC}"
+echo -e "    /vctk-init-session       Load context at session start"
+echo -e "    /vctk-save-session       Save context at session end"
 echo ""
 echo -e "${CYAN}═══════════════════════════════════════════════════════════${NC}"
 echo ""
 echo -e "${YELLOW}Quick start:${NC}"
-echo "  1. Start new feature:  /feature-brief"
-echo "  2. Design solution:    /technical-spec"
-echo "  3. Build it:           /implement-feature"
-echo "  4. Review changes:     /review-code"
+echo "  1. Initialize:  /vctk-init-session"
+echo "  2. New feature: /vctk-feature-brief"
+echo "  3. Design:      /vctk-technical-spec"
+echo "  4. Build:       /vctk-implement-feature"
+echo "  5. Review:      /vctk-review-code"
+echo "  6. Save:        /vctk-save-session"
 echo ""
 echo -e "Documentation: ${BLUE}$REPO_URL${NC}"
 echo ""
