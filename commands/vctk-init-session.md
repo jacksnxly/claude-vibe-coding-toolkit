@@ -87,6 +87,8 @@ git status --short | head -10
 
 | Utility | Command |
 |---------|---------|
+| Adversarial review | /vctk-challenge |
+| Tech debt scan | /vctk-techdebt |
 | Preflight check | /vctk-init |
 | Save session | /vctk-save-session |
 | Learn from session | /vctk-learn |

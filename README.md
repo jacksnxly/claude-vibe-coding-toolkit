@@ -114,6 +114,24 @@ The plugin uses `.agent/` for documents:
 └── ...
 ```
 
+### `/challenge` (Adversarial Review)
+
+Grills the developer on their changes before approving.
+
+- Acts as a senior staff engineer doing a verbal code review
+- Asks tough questions about design decisions, edge cases, and trade-offs
+- Scores answers and produces a READY / NOT READY / NEEDS FIXES verdict
+- Won't approve until you demonstrate understanding of your own code
+
+### `/techdebt` (Tech Debt Scanner)
+
+Scans the codebase for code smells and technical debt.
+
+- Finds TODOs/FIXMEs, duplicated code, dead code, inconsistencies, complexity hotspots
+- Prioritizes findings by impact vs effort (P0-P4 matrix)
+- Can fix P0s immediately, create issues, or save report for later
+- Run at end of sessions to keep debt from compounding
+
 ### `/learn` (Session Learning)
 
 Extract lessons from the current session and persist them to `CLAUDE.md`.
