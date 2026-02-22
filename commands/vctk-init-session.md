@@ -89,6 +89,7 @@ git status --short | head -10
 |---------|---------|
 | Preflight check | /vctk-init |
 | Save session | /vctk-save-session |
+| Learn from session | /vctk-learn |
 | Update VCTK | /vctk-update |
 | Sync docs | /vctk-sync-docs |
 ```

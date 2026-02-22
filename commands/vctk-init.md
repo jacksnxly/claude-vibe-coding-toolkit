@@ -19,13 +19,14 @@ ls -1 .claude/commands/vctk-*.md 2>/dev/null | wc -l | xargs -I {} echo "Found {
 ls -1 .claude/commands/vctk-*.md 2>/dev/null
 ```
 
-**Required commands (9 total):**
+**Required commands (10 total):**
 - `vctk-feature-brief.md`
 - `vctk-technical-spec.md`
 - `vctk-implement-feature.md`
 - `vctk-review-code.md`
 - `vctk-init-session.md`
 - `vctk-save-session.md`
+- `vctk-learn.md`
 - `vctk-update.md`
 - `vctk-sync-docs.md`
 - `vctk-init.md`
@@ -122,7 +123,7 @@ VCTK Preflight Check
 
 | Component | Status | Notes |
 |-----------|--------|-------|
-| Commands | [status] | [X/9 installed] |
+| Commands | [status] | [X/10 installed] |
 | Skills | [status] | [X/4 installed] |
 | .agent folders | [status] | [created/exists] |
 | Version | [version] | [up-to-date/update available] |
@@ -196,6 +197,7 @@ Utility Commands
 ----------------
 /vctk-init-session       Load developer context
 /vctk-save-session       Save session state
+/vctk-learn              Extract lessons → update CLAUDE.md
 /vctk-update             Update VCTK
 /vctk-sync-docs          Sync .agent documentation
 /vctk-init               This preflight check

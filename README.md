@@ -114,13 +114,24 @@ The plugin uses `.agent/` for documents:
 └── ...
 ```
 
+### `/learn` (Session Learning)
+
+Extract lessons from the current session and persist them to `CLAUDE.md`.
+
+- Scans for corrections, failed attempts, discovered patterns, and user preferences
+- Deduplicates against existing `CLAUDE.md` rules
+- Presents lessons for user approval before saving
+- Supports both project and global `CLAUDE.md`
+- Also integrated into `/save-session` — auto-proposes lessons at session end
+
 ## Key Principles
 
 1. **Gate enforcement** - Each phase requires previous phase's output
 2. **Role separation** - Agents stay in their lane (interviewer doesn't code, executor doesn't decide)
 3. **Constraint-based** - Specs generate verifiable constraints, review checks them
 4. **Human decisions** - AI presents options, humans choose
-5. **No git required** - Works with files in working directory (vibe-coder friendly)
+5. **Continuous learning** - Sessions feed lessons back into CLAUDE.md for compounding improvement
+6. **No git required** - Works with files in working directory (vibe-coder friendly)
 
 ## License
 
